@@ -41,6 +41,11 @@ class Book
         return $this->borrowed;
     }
 
+    public function getBorrowedAt(): string
+    {
+        return $this->borrowed_at;
+    }
+
     public function getReturnTime(): string
     {
         $dateTime = DateTime::createFromFormat(self::DATETIME_FORMAT, $this->borrowed_at);

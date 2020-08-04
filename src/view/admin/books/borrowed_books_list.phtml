@@ -1,0 +1,39 @@
+<?php
+require_once(__DIR__ . '/../../common/header.phtml');
+$action = "/admin/borrowed_books";
+?>
+
+<section class="padded">
+    <h3>Borrowed books list</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>ISBN</th>
+                <th>Borrow Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($this->borrowedBooks as $book): /** @var Book $book */?>
+            <tr>
+                <td><?= $book->getId()?></td>
+                <td><?= $book->getTitle()?></td>
+                <td><?= $book->getAuthor()?></td>
+                <td><?= $book->getIsbn()?></td>
+                <td><?= $book->getBorrowedAt()?></td>
+            </tr>
+            <?php endforeach ?>
+        </tbody>
+    </table>
+</section>
+<section class="padded">
+    <form action="<?= $action?>" method="post" class="form-inline">
+        <div class="form-group mx-sm-3 mb-2">
+            <input type="number" min="0" class="form-control" placeholder="Number of Days" name="days">
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Filter</button>
+    </form>
+</section>
+<?php require_once(__DIR__ . '/../../common/footer.phtml'); ?>

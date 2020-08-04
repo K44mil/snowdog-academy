@@ -41,6 +41,9 @@ RouteRepository::registerRoute('GET', '/admin/user/activate/{id:\d+}', Admin\Use
 // Load Books From Csv
 RouteRepository::registerRoute('GET', '/admin/load_from_csv', Admin\Books::class, 'loadBooksFromCsv');
 RouteRepository::registerRoute('POST', '/admin/load_from_csv', Admin\Books::class, 'loadBooksFromCsvPost');
+// Borrowed Books
+RouteRepository::registerRoute('GET', '/admin/borrowed_books', Admin\Books::class, 'borrowedBooks');
+RouteRepository::registerRoute('POST', '/admin/borrowed_books', Admin\Books::class, 'borrowedBooksPost');
 
 Menu::register(LoginMenu::class, 100);
 Menu::register(RegisterMenu::class, 200);

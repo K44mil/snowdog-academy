@@ -9,12 +9,16 @@ class Books extends AdminAbstract
 {
     private BookManager $bookManager;
     private ?Book $book;
+    private array $borrowedBooks;
+
+    private const DATETIME_FORMAT = 'Y-m-d H:i:s';
 
     public function __construct(BookManager $bookManager)
     {
         parent::__construct();
         $this->bookManager = $bookManager;
         $this->book = null;
+        $this->borrowedBooks = [];
     }
 
     public function index(): void
@@ -111,6 +115,31 @@ class Books extends AdminAbstract
             $_SESSION['flash'] = "$savedBooks of $booksCount books saved correctly.";
             header('Location: /admin');
         }
+    }
+
+    public function borrowedBooks(): void
+    {
+        $books = $this->bookManager->getAllBorrowedBooks();
+        $this->borrowedBooks = $books;
+        require __DIR__ . '/../../view/admin/books/borrowed_books_list.phtml';
+    }
+
+    public function borrowedBooksPost(): void
+    {
+        date_default_timezone_set("Europe/Warsaw");
+        if (isset($_POST['days'])) {
+            $days = $_POST['days'];
+            $date = date(self::DATETIME_FORMAT, strtotime("-$days days"));
+            $books = $this->bookManager->getAllBorrowedBooks();
+            $resultBooks = [];
+            for ($i = 0; $i < count($books); $i++) {
+                if (date(self::DATETIME_FORMAT, strtotime($books[$i]->getBorrowedAt())) > $date) {
+                    array_push($resultBooks, $books[$i]);
+                }
+            }
+            $this->borrowedBooks = $resultBooks;
+        }
+        require __DIR__ . '/../../view/admin/books/borrowed_books_list.phtml';
     }
 
     private function getBooks(): array

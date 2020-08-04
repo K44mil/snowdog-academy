@@ -55,6 +55,18 @@ class BookManager
         return $query->fetchAll(Database::FETCH_CLASS, Book::class);
     }
 
+    public function getAllBorrowedBooks(): array
+    {
+        $queryString = "SELECT b.*, br.borrowed_at
+                        FROM books b
+                        INNER JOIN borrows br
+                        WHERE b.id = br.book_id";
+        
+        $query = $this->database->query($queryString);
+
+        return $query->fetchAll(Database::FETCH_CLASS, Book::class);
+    }
+
     public function getAvailableBooks(): array
     {
         $query = $this->database->query('SELECT * FROM books WHERE borrowed = 0');
