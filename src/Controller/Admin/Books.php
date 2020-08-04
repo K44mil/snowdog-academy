@@ -75,6 +75,44 @@ class Books extends AdminAbstract
         header('Location: /admin');
     }
 
+    public function loadBooksFromCsv(): void
+    {
+        require __DIR__ . '/../../view/admin/books/load_from_csv.phtml';
+    }
+
+    public function loadBooksFromCsvPost(): void
+    {
+        if (isset($_FILES['csvFile'])) {
+            $filename = $_FILES['csvFile']['tmp_name'] ?? '';
+            if (!file_exists($filename)) {
+                $_SESSION['flash'] = 'Unable to read a file.';
+                header('Location: ' . $_SERVER['HTTP_REFERER']);
+                return;
+            }
+
+            $filenameExploded = explode('.', $_FILES['csvFile']['name']);
+            $fileExt = $filenameExploded[count($filenameExploded) - 1];
+            if ($fileExt !== 'csv') {
+                $_SESSION['flash'] = 'Wrong file type.';
+                header('Location: ' . $_SERVER['HTTP_REFERER']);
+                return;
+            }
+
+            $booksCount = 0;
+            $savedBooks = 0;
+            $handle = fopen($filename, "r");
+            while (($line = fgetcsv($handle, 1000, ',')) !== FALSE) {
+                if ($this->bookManager->create($line[0], $line[1], $line[2]))
+                    $savedBooks++;
+                $booksCount++;
+            }
+            fclose($handle);
+
+            $_SESSION['flash'] = "$savedBooks of $booksCount books saved correctly.";
+            header('Location: /admin');
+        }
+    }
+
     private function getBooks(): array
     {
         return $this->bookManager->getAllBooks();
