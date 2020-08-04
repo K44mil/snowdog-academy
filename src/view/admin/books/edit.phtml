@@ -12,6 +12,9 @@ if ($this->book instanceof Book) {
 ?>
 
 <section id="new-book-form" class="padded">
+    <div class="alert alert-danger" role="alert" id="alert" style="display: none;">
+    Unable to fetch book data.
+    </div>
     <form class="form-horizontal" method="POST" action="<?= $action ?>">
         <div class="form-group">
             <label for="book-title" class="col-sm-1 control-label">Title:</label>
@@ -34,9 +37,52 @@ if ($this->book instanceof Book) {
         <div class="form-group">
             <div class="col-sm-offset-1 col-sm-2">
                 <button type="submit" class="btn btn-primary">Save book</button>
+                <button type="button" id="btnFetch" class="btn btn-info" disabled>Fetch Data</button>
             </div>
         </div>
     </form>
 </section>
+
+<script>
+    const btnFetch = document.getElementById('btnFetch');
+    const isbnInput = document.getElementById('isbn');
+    const titleInput = document.getElementById('book-title');
+    const authorInput = document.getElementById('author');
+    const alert = document.getElementById('alert');
+
+    isbnInput.addEventListener('input', (e) => {
+        if (isbnInput.value.match(/^[0-9]{13}$/) || (isbnInput.value.match(/^[0-9]{10}$/)))
+            btnFetch.disabled = false;
+        else
+            btnFetch.disabled = true;
+    });
+
+    btnFetch.addEventListener('click', (e) => {
+        const isbn = isbnInput.value;
+        const url = `https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&jscmd=data&format=json`;
+
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                const key = Object.keys(data)[0];
+                if (!key) {
+                    alert.style.display = 'block';
+                    setTimeout(() => {
+                        alert.style.display = 'none';
+                    }, 2000);
+                    authorInput.value = "";
+                    titleInput.value = "";
+                    isbnInput.value = "";
+                    return;
+                }     
+                const authorName = data[key].authors[0].name;
+                const title = data[key].title;
+                authorInput.value = authorName;
+                titleInput.value = title;
+            });
+        e.preventDefault();
+    });
+
+</script>
 
 <?php require_once(__DIR__ . '/../../common/footer.phtml'); ?>
