@@ -13,7 +13,9 @@ require_once(__DIR__ . '/../common/header.phtml'); ?>
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($this->getBooks() as $book): /** @var Book $book */?>
+        <?php foreach ($this->getBooks() as $book): /** @var Book $book */ 
+            if (!$book->isForChildren() && !$this->isLoggedUserAdult()) continue;
+            ?>
             <tr>
                 <td><?= $book->getTitle()?></td>
                 <td><?= $book->getAuthor()?></td>

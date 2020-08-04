@@ -31,6 +31,7 @@ CREATE TABLE `books` (
   `author` varchar(255) NOT NULL,
   `isbn` varchar(13) NOT NULL,
   `borrowed` boolean NOT NULL default 0,
+  `for_children` boolean NOT NULL default 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `isbn` (`isbn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -40,9 +41,9 @@ SQL;
 
     private function addBooks(): void
     {
-        $this->bookManager->create('Harry Potter and the Chamber of Secrets', 'J. K. Rowling', '9780439064873');
-        $this->bookManager->create('It: A Novel', 'Stephen King', '9781501142970');
-        $this->bookManager->create('The Da Vinci Code', 'Dan Brown', '9780307474278');
-        $this->bookManager->create('Wiedźmin. Ostatnie życzenie', 'Andrzej Sapkowski', '9788375780635');
+        $this->bookManager->create('Harry Potter and the Chamber of Secrets', 'J. K. Rowling', '9780439064873', 1);
+        $this->bookManager->create('It: A Novel', 'Stephen King', '9781501142970', 0);
+        $this->bookManager->create('The Da Vinci Code', 'Dan Brown', '9780307474278', 0);
+        $this->bookManager->create('Wiedźmin. Ostatnie życzenie', 'Andrzej Sapkowski', '9788375780635', 1);
     }
 }

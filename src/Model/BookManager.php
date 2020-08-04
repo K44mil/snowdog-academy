@@ -13,13 +13,14 @@ class BookManager
         $this->database = $database;
     }
 
-    public function create(string $title, string $author, string $isbn): int
+    public function create(string $title, string $author, string $isbn, bool $forChildren = FALSE): int
     {
-        $statement = $this->database->prepare('INSERT INTO books (title, author, isbn) VALUES (:title, :author, :isbn)');
+        $statement = $this->database->prepare('INSERT INTO books (title, author, isbn, for_children) VALUES (:title, :author, :isbn, :for_children)');
         $binds = [
             ':title' => $title,
             ':author' => $author,
-            ':isbn' => $isbn
+            ':isbn' => $isbn,
+            ':for_children' => $forChildren
         ];
         $statement->execute($binds);
 

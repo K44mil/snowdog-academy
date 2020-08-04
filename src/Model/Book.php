@@ -14,6 +14,7 @@ class Book
     private string $author;
     private string $isbn;
     private bool $borrowed;
+    private bool $for_children;
     private ?string $borrowed_at;
 
     public function getId(): int
@@ -44,6 +45,11 @@ class Book
     public function getBorrowedAt(): string
     {
         return $this->borrowed_at;
+    }
+
+    public function isForChildren(): bool
+    {
+        return $this->for_children;
     }
 
     public function getReturnTime(): string

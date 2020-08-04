@@ -9,6 +9,7 @@ class User
     public string $password;
     public bool $is_admin;
     public bool $is_active;
+    public int $type;
 
     public function getId(): int
     {
@@ -33,5 +34,15 @@ class User
     public function isActive(): bool
     {
         return (bool) $this->is_active;
+    }
+
+    public function getType(): int
+    {
+        return $this->type;
+    }
+
+    public function isAdult(): bool
+    {
+        return $this->type === UserType::Adult;
     }
 }
